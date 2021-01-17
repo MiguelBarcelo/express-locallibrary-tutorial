@@ -3,12 +3,17 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const mongoose = require("mongoose");
 
 // Use gzip/deflate compression for responses
 const compression = require("compression");
 
 // To protect against well know vulnerabilities
 const helmet = require("helmet");
+
+// Enviroment
+const dotenv = require("dotenv");
+dotenv.config();
 
 // require modules from our routes directory
 const indexRouter = require("./routes/index");
@@ -22,9 +27,8 @@ const app = express();
 app.use(helmet());
 
 // Set up mongoose connection
-const mongoose = require("mongoose");
-const mongoDB =
-  "mongodb+srv://mb08:qazqsx@cluster0.xdb5y.mongodb.net/local_library?retryWrites=true&w=majority";
+//const dev_db_url = "mongodb+srv://mb08:qazqsx@cluster0.xdb5y.mongodb.net/local_library?retryWrites=true&w=majority";
+const mongoDB = process.env.MONGODB_URI;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
